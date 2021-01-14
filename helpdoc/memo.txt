@@ -1,0 +1,52 @@
+동시간대에 주변환경에 의해 무엇인가가 바뀌어야 한다면 새로운 결과배열에 담아야하고
+ex) if(input[i] == input[i + 1]) result[i + 1] = 1;
+
+시간의 흐름에따라 무엇인가가 바뀌어야 한다면 동시간대에 처리된 결과배열을 기존의 input에 넣어서 원본을 교체
+for(int timeflow = 0; timeflow < maxtime; ++timeflow){
+    if(input[i] == input[i + 1]) result[i + 1] = 1;
+    ...그외 동시간대에 일어난 일들에 대한 기타 로직
+
+
+    //
+    for(int i = 0; i < ...; i++){
+        input[i] = result[i];
+    }
+}
+
+dfs(깊이우선탐색) : 스택기반(ps할땐 보통 재귀). 나먼저 방문하고 인접한곳 방문
+bfs(너비우선탐색) : 큐기반
+
+stack : 일들간에 선행관계가 있을때 사용.
+
+백트래킹 : dfs탐색하다가 가능성이 없는곳은 탐색안하는것. 그냥 불필요한 탐색 예외처리했냐 여부네
+
+
+재귀함수의 구성
+1. 종료부
+2. 분할부
+3. 해결부
+(분할부와 해결부는 같이있을수 있음)
+
+//F(n) = n + F(n-1)
+int recursiveSum(int n){
+    if( n == 1) return 1;//종료부
+    return n + recursiveSum(n-1);//return n + recursiveSum(n-1)전체가 해결부 recursiveSUm(n-1)가 분할부
+}
+
+완탐은 모든 경우의수 전부 탐색
+탐욕법은 가장 최선의 선택을 계속(특수한 케이스에만 사요ㅛㅇ 가능. 최선을 선택해나간다고 최종적으로 최적해가 나온다는 보장이 없는경우가 많음. 탐욕법 사용가능한지 판단이 중요. 가정을 세웠는데 가정에 모순이 생기면 탐욕법으로는 안됨)
+
+
+
+
+전위탐색 : 탐색을 하는동안에 어떤 주요 로직이 수행되야 하는경우
+preorder(node)
+  print node.value
+  if node.left ≠ null then preorder(node.left)
+  if node.right ≠ null then preorder(node.right)
+
+후위탐색 : 탐색을 끝마치고 가장 마지막 리프노드부터 로직이 수행되야하는 경우
+postorder(node)
+  if node.left  ≠ null then postorder(node.left)
+  if node.right ≠ null then postorder(node.right)
+  print node.value

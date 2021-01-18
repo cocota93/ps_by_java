@@ -1,10 +1,8 @@
-package com.ps.백준.미분류.수열의순서;
+package com.ps.백준.완전탐색.수열의순서;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.*;
-import java.io.FileInputStream;
-import java.util.stream.Collectors;
 
 //첫번쨰 시도...시간초과...고민해보다가 백준 질문검색 게시판 보니 NextPermutation은 n!라서 안된다는 글 봄. 해결방법은 안봄
 //NextPermutation 말고 다른걸 구현하던가 어떤 규칙을 파악해서 중간을 건너뛰고 시작해야할것 같은데..
@@ -18,7 +16,7 @@ import java.util.stream.Collectors;
 class Main {
 
     public static void main(String[] args) throws Exception {
-//        System.setIn(new FileInputStream("src/com/ps/백준/미분류/수열의순서/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/수열의순서/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;

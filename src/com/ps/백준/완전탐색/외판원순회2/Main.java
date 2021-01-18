@@ -3,6 +3,7 @@ package com.ps.백준.완전탐색.외판원순회2;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 
@@ -25,19 +26,20 @@ import java.util.StringTokenizer;
 * */
 
 /*
-* https://log-laboratory.tistory.com/123 보니까 그냥 dfs문제인것 같아서 dfs로 풀었더니 원하는 출력값이 아님..
-* 어디서 틀린건지 모르곘음
+* https://log-laboratory.tistory.com/123 보니까 그냥 dfs문제인것 같아서 dfs로 풀었더니 원하는 출력값이 아님.. 어디서 틀린건지 모르곘음
+* -> 다시 왔던곳으로 못돌아가도록 수정후 해결. visitCheck[currentCity][nextCity] = visitCheck[nextCity][currentCity] = true;
+* -> 하지만 시간초과. visitCheck를 일차원배열로 바꿨더니 해결..이게 뭐라고 시간초과 여부를 가를정도인가??어차피 인덱스접근인데?
 * */
 
 class Main {
     static int board[][];
-    static boolean visitCheck[][];
+    static boolean visitCheck[];
     static int cityCount;
     static int minCost = Integer.MAX_VALUE;
     static int startCity;
 
     public static void main(String[] args) throws Exception {
-        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/외판원순회2/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/외판원순회2/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
@@ -51,14 +53,12 @@ class Main {
             }
         }
 
-        visitCheck = new boolean[cityCount][cityCount];
-
-
         for (int i = 0; i < cityCount; i++) {
             startCity = i;
 
             int visitCount = 0;
             int curCost = 0;
+            visitCheck = new boolean[cityCount];
             DFS(startCity, visitCount, curCost);
         }
 
@@ -73,11 +73,11 @@ class Main {
 
         for (int nextCity = 0; nextCity < board.length; nextCity++) {
             if(board[currentCity][nextCity] == 0) continue;
-            if(visitCheck[currentCity][nextCity] == true) continue;
+            if(visitCheck[nextCity] == true) continue;
 
-            visitCheck[currentCity][nextCity] = true;
+            visitCheck[nextCity] = true;
             DFS(nextCity, visitCount + 1, curCost + board[currentCity][nextCity]);
-            visitCheck[currentCity][nextCity] = false;
+            visitCheck[nextCity] = false;
         }
     }
 }

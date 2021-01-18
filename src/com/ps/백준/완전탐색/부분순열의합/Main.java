@@ -32,44 +32,26 @@ class Main {
             board[i] = Integer.parseInt(st.nextToken());
         }
 
-        List<Integer> container = new ArrayList<>();
         int curDepth = 0;
         int curSum = 0;
-        int result = Recur(board, curDepth, curSum, s, container);
+        int result = Recur(board, curDepth, curSum, s) - 1;//아무것도 안더하는 케이스 하나를 뺴줌
         System.out.println(result);
     }
 
-    private static int Recur(int[] board, int curDepth, int curSum, int destSum, List<Integer> container) {
-        if(curDepth == board.length - 1){
-            container.add(board[curDepth]);
+    private static int Recur(int[] board, int curDepth, int curSum, int destSum) {
+        if(curDepth == board.length){
+            //재귀로 코드를 작성할떄 이 종료부에서는 딱 체크만 하는것 같다.
+            //만약 여기서 뭔가 값이 변경될경우 로직 구성이 상당히 애매해지는경우가 많은것 같음
+            //예를들면 여기서 board에 무엇인가를 넣을경우 크기가 바뀌기 떄문에 이전에 계산한 인덱스가 안맞을수 있음.
+            //결국 코드 더러워지고 안그래도 머리아픈 재귀인데 이상하게 꼬일가능성 매우 높아짐.
 
-            if(curSum + board[curDepth] != destSum) {
-                container.stream().forEach(number -> System.out.printf("%d ", number));
-                int sum = container.stream().reduce((o1, o2) -> o1 + o2).get();
-                System.out.printf(", sum : " + sum);
-                System.out.println("");
-                container.removeIf(number -> number == board[curDepth]);
-                return 0;
-            }
-
-            container.stream().forEach(number -> System.out.printf("%d ", number));
-            int sum = container.stream().reduce((o1, o2) -> o1 + o2).get();
-            System.out.printf(", sum : " + sum);
-            System.out.println("");
-            container.removeIf(number -> number == board[curDepth]);
+            if(curSum != destSum) return 0;
             return 1;
         }
 
-//        if(container.stream().anyMatch(number -> number == -2) && container.stream().anyMatch(number -> number == -3)){
-//            System.out.printf("asas");
-//        }
-
         int count = 0;
-        count += Recur(board, curDepth + 1, curSum, destSum, container);
-
-        container.add(board[curDepth]);
-        count += Recur(board, curDepth + 1, curSum + board[curDepth], destSum, container);
-        container.removeIf(number -> number == board[curDepth]);
+        count += Recur(board, curDepth + 1, curSum, destSum);
+        count += Recur(board, curDepth + 1, curSum + board[curDepth], destSum);
 
         return count;
     }

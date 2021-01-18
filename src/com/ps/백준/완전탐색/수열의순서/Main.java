@@ -50,16 +50,10 @@ class Main {
             }
 
 
-            if(kCount == 0){
-                System.out.println(Arrays.toString(board));
-                return;
-            }else{
-                for (int i = 1; i < kCount; i++) {
-                    NextPermutation(board);
-                }
-                Arrays.stream(board).forEach(number -> System.out.printf("%d ", number));
-                return;
+            for (int i = 1; i < kCount; i++) {
+                NextPermutation(board);
             }
+            Arrays.stream(board).forEach(number -> System.out.printf("%d ", number));
         }else if(type == 2){
             //몇번쨰 수열인지
 
@@ -96,19 +90,15 @@ class Main {
                 return;
             }
 
-            while(true){
-                boolean hasNext = NextPermutation(board);
-                count++;
+
+            do{
                 if(Arrays.equals(board, destAnswer)){
                     System.out.println(count);
-                    return;
+                    break;
                 }
 
-                if(!hasNext){
-                    return;
-                }
-            }
-
+                count++;
+            }while(NextPermutation(board));
         }
     }
 

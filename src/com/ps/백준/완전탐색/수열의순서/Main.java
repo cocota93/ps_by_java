@@ -1,6 +1,7 @@
 package com.ps.백준.완전탐색.수열의순서;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
@@ -10,13 +11,13 @@ import java.util.*;
 //두번째 시도...재귀로 구현시도...실패...해답보러...규칙을 파악해서 중간을 건너뛰는게 포인트였다. 이것도 해볼껄 ㅎㅎ;;
 //세번쨰 시도...중간을 건너 뛰고 시작해봤지만 시간초과...ㅡㅡ
 
-//풀이 출처 : https://dundung.tistory.com/60
-
+//풀이 출처 : https://it-earth.tistory.com/115
+//https://wjdgus2951.tistory.com/66
 
 class Main {
 
     public static void main(String[] args) throws Exception {
-//        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/수열의순서/input.txt"));
+        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/수열의순서/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
@@ -27,84 +28,64 @@ class Main {
         st = new StringTokenizer(br.readLine()," ");
         int type = Integer.parseInt(st.nextToken());
 
+        long preCaledFactorial[] = new long[21];
+        for (int i = 0; i < preCaledFactorial.length; i++) {
+            preCaledFactorial[i] = Factorial(i);
+        }
+
         if(type == 1){
-            int board[] = new int[n];
-
             int kCount = Integer.parseInt(st.nextToken());//k번쨰 수열
+            List<Integer> result = new ArrayList<>();
 
-            int range = Factorial(n - 1);
-            for (int i = 1; i <= n; i++) {
-                int rangeEnd = range * i;
-                if(kCount < rangeEnd){
-                    board[0] = i;
-                    Queue<Integer> queue = new LinkedList<>();
-                    for (int j = 0; j < board.length; j++) {
-                        if(j + 1 == i) continue;
-                        queue.add(j + 1);
+            boolean usedNumber[] = new boolean[21];
+
+            for (int orderDigit = 1; orderDigit <= n; orderDigit++) {
+                for (int useNumberIdx = 1; useNumberIdx <= n; useNumberIdx++) {
+                    if(usedNumber[useNumberIdx] == true) continue;
+
+                    if(preCaledFactorial[n - orderDigit] < kCount){
+                        kCount -= preCaledFactorial[n - orderDigit];
+                    }else{
+                        result.add(useNumberIdx);
+                        usedNumber[useNumberIdx] = true;
+                        break;
                     }
-                    for (int j = 1; j < board.length; j++) {
-                        board[j] = queue.poll();
-                    }
-                    break;
                 }
             }
 
-
-            for (int i = 1; i < kCount; i++) {
-                NextPermutation(board);
+            for (int i = 0; i < result.size(); i++) {
+                System.out.printf("%d ", result.get(i));
             }
-            Arrays.stream(board).forEach(number -> System.out.printf("%d ", number));
         }else if(type == 2){
-            //몇번쨰 수열인지
-
-
-            int destAnswer[] = new int[n];
+            //입력으로 준 숫자가 몇번쨰 수열인지
+            int inputPermutation[] = new int[n];
             for (int i = 0; i < n; i++) {
                 int num = Integer.parseInt(st.nextToken());
-                destAnswer[i] = num;
+                inputPermutation[i] = num;
             }
 
-            int board[] = new int[n];
-            if(destAnswer[0] == 1){
-                for (int i = 0; i < board.length; i++) {
-                    board[i] = i + 1;
-                }
-            }else{
-                board[0] = destAnswer[0];
-                Queue<Integer> queue = new LinkedList<>();
-                for (int j = 0; j < board.length; j++) {
-                    if(j + 1 == board[0]) continue;
-                    queue.add(j + 1);
-                }
-                for (int j = 1; j < board.length; j++) {
-                    board[j] = queue.poll();
+            boolean usedNumber[] = new boolean[21];
+
+            long resultK = 0;
+            for (int orderDigit = 0; orderDigit < inputPermutation.length; orderDigit++) {
+                for (int useNumber = 1; useNumber < inputPermutation[orderDigit]; useNumber++) {
+                    if(usedNumber[useNumber] == true) continue;
+                    resultK += preCaledFactorial[inputPermutation.length - orderDigit - 1];
+                    //dest.length - destOrdinal - 1 요 계산이
+                    //각 자릿수의 F(n) = n * F(n - 1)를 계산할때 F(n - 1)을 의미한다는걸 더 이해하기 쉽게 표현하고싶은데...
                 }
 
+                usedNumber[inputPermutation[orderDigit]] = true;
             }
 
-            int range = Factorial(n - 1);
-            int skipCount = range * (board[0] - 1);
-            int count = 1 + skipCount;
-            if(Arrays.equals(board, destAnswer)){
-                System.out.println(count);
-                return;
-            }
-
-
-            do{
-                if(Arrays.equals(board, destAnswer)){
-                    System.out.println(count);
-                    break;
-                }
-
-                count++;
-            }while(NextPermutation(board));
+            System.out.println(resultK + 1);
         }
+
     }
 
-    private static int Factorial(int i) {
-        int result = 1;
-        for (int j = i - 1; j >= 2; j--) {
+    private static long Factorial(int i) {
+        long result = 1;
+        for (int j = i; j >= 2; j--) {
             result *= j;
         }
         return result;

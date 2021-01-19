@@ -17,7 +17,7 @@ import java.util.*;
 class Main {
 
     public static void main(String[] args) throws Exception {
-        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/수열의순서/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/수열의순서/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
@@ -29,12 +29,16 @@ class Main {
         int type = Integer.parseInt(st.nextToken());
 
         long preCaledFactorial[] = new long[21];
-        for (int i = 0; i < preCaledFactorial.length; i++) {
-            preCaledFactorial[i] = Factorial(i);
+        preCaledFactorial[0] = 1;
+        for (int i = 1; i < preCaledFactorial.length; i++) {
+            preCaledFactorial[i] = i * preCaledFactorial[i - 1];
         }
+//        for (int i = 0; i < preCaledFactorial.length; i++) {
+//            preCaledFactorial[i] = Factorial(i);
+//        }
 
         if(type == 1){
-            int kCount = Integer.parseInt(st.nextToken());//k번쨰 수열
+            long kCount = Long.parseLong(st.nextToken());//k번쨰 수열
             List<Integer> result = new ArrayList<>();
 
             boolean usedNumber[] = new boolean[21];
@@ -98,13 +102,13 @@ class Main {
         //0. 오름차순으로 시작해서 내림차순으로 끝. 오름차순이면 아직 다음이 남은것.
         //1. 작은 부분 순열의 시작 인덱스 선택. 이후 로직의 기준위치.
         int i = board.length - 1;
-        while(i > 0 && board[i - 1] > board[i] ) --i;
+        while(i > 0 && board[i - 1] >= board[i] ) --i;
 
         if(i == 0) return false;
 
         //2. 기준위치의 앞 숫자를 무엇으로 바꿀것인지 탐색. 순열이 진행될수록 더 큰숫자로 바뀌어야 하니 더 큰숫자를 찾는다.
         int j = board.length - 1;
-        while(board[i - 1] > board[j]) --j;
+        while(board[i - 1] >= board[j]) --j;
 
         //3. 작은 부분순열의 바로앞 숫자가 더 크게 바뀜으로써 새로운 부분순열의 시작되도록 스왑
         Swap(board, i - 1, j);

@@ -11,7 +11,7 @@ class Main {
 
     //fail
     public static void main(String[] args) throws Exception {
-        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/다음순열/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/다음순열/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
@@ -26,13 +26,19 @@ class Main {
         }
 
         if(CheckSorted(board)){
-            System.out.println("-1");
+            System.out.printf("-1");
             return;
         }
 
-        System.out.println(Arrays.toString(board));
-        while(NextPermutation(board));
+        boolean morePermutation = NextPermutation(board);
+//        if(!morePermutation){
+//            System.out.printf("-1");
+//            return;
+//        }
 
+        for (int i = 0; i < board.length; i++) {
+            System.out.printf("%d ", board[i]);
+        }
     }
 
     private static boolean NextPermutation(int[] board) {
@@ -88,7 +94,7 @@ class Main {
         int i = board.length - 1;
         while(i > 0 && board[i - 1] >= board[i]) i--;//내림차순으로 바꿀 위치 탐색. i는 내림차순으로 바꿀 위치의 인덱스
 
-        if(i == 0) return false;
+        if(i <= 0) return false;
 
         int j = board.length - 1;
         while(board[i - 1] >= board[j]) --j;
@@ -104,7 +110,7 @@ class Main {
             k--;
         }
 
-        System.out.println(Arrays.toString(board));
+//        System.out.println(Arrays.toString(board));
         return true;
     }
 
@@ -118,6 +124,7 @@ class Main {
         int prev = board[0];
         for (int i = 1; i < board.length; i++) {
             if(prev < board[i]) return false;
+            else prev = board[i];
         }
 
         return true;

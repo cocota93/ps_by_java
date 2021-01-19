@@ -9,7 +9,6 @@ public class 재귀를이용한_브루트포스 {
 
 
     private static int solution(int curN, int limitN, int[] makeNumber) {
-
         if(curN == limitN){
             System.out.println(Arrays.toString(makeNumber));
             return 1;
@@ -17,7 +16,6 @@ public class 재귀를이용한_브루트포스 {
 
         int result = 0;
         for (int i = 0; i < 10; i++) {
-//            System.out.println(Arrays.toString(makeNumber));
             makeNumber[curN] = i;
             result += solution(curN + 1, limitN, makeNumber);
         }

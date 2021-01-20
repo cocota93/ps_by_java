@@ -1,9 +1,9 @@
 package com.ps.백준.완전탐색.모든순열;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
-import java.util.Scanner;
-import java.io.FileInputStream;
+import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 /*
@@ -17,7 +17,7 @@ class Main {
     public static void main(String[] args) throws Exception {
 //        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/모든순열/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
 
         int n = Integer.parseInt(br.readLine());
@@ -28,11 +28,15 @@ class Main {
 
         do{
             for (int i = 0; i < board.length; i++) {
-                System.out.printf("%d ", board[i]);
+//                System.out.printf("%d ", board[i]);
+                bw.write(board[i] + " ");
             }
-            System.out.println("");
+            bw.newLine();
+//            System.out.printf("\n");
         }while(NextPermutation());
 
+        bw.flush();
+        bw.close();
     }
 
     private static boolean NextPermutation() {

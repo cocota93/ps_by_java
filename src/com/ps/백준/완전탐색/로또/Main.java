@@ -21,27 +21,35 @@ class Main {
     static int board[];
 
     public static void main(String[] args) throws Exception {
-        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/로또/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/로또/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
 
+        st = new StringTokenizer(br.readLine(), " ");
+        int k = Integer.parseInt(st.nextToken());
+        if(k == 0) return;
+
+
         while(true){
-            st = new StringTokenizer(br.readLine(), " ");
-            int k = Integer.parseInt(st.nextToken());
-            if(k == 0) return;
 
             S = new int[k];
             for (int i = 0; i < S.length; i++) {
                 S[i] = Integer.parseInt(st.nextToken());
             }
             usedNumber = new boolean[k];
-
             board = new int[6];
 
             int depth = 0;
             int orderDigit = 0;
             Recur(depth, orderDigit);
+
+
+
+            st = new StringTokenizer(br.readLine(), " ");
+            k = Integer.parseInt(st.nextToken());
+            if(k == 0) return;
+            System.out.println("");
         }
 
     }
@@ -56,9 +64,9 @@ class Main {
         }
 
 
-        for (int i = prevOrderDigit; i < S.length; i++) {
+        for (int i = 0; i < S.length; i++) {
             if(usedNumber[i] == true) continue;
-            if(depth != 0 && board[depth - 1] >= S[i]) return;
+            if(depth != 0 && board[depth - 1] >= S[i]) continue;
 
             usedNumber[i] = true;
             board[depth] = S[i];

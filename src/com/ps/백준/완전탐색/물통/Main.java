@@ -60,30 +60,39 @@ class Main {
     static int bottleMaxCapacityA;
     static int bottleMaxCapacityB;
     static int bottleMaxCapacityC;
-    static boolean enqueueState[][][] = new boolean[201][201][201];
+    static boolean enqueueState[][][];
     static Queue<BottleSnapShot> bottleSnapShotQueue = new LinkedList<>();
     static Set<Integer> answer = new HashSet<>();
 
     static int loopCounterForDebug;
 
     public static void main(String[] args) throws Exception {
-//        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/물통/input.txt"));
+        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/물통/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
 
-        st = new StringTokenizer(br.readLine(), " ");
-        bottleMaxCapacityA = Integer.parseInt(st.nextToken());
-        bottleMaxCapacityB = Integer.parseInt(st.nextToken());
-        bottleMaxCapacityC = Integer.parseInt(st.nextToken());
+        for (int i = 0; i < 1000; i++) {
+            enqueueState = new boolean[201][201][201];
+            bottleSnapShotQueue.clear();
+            answer.clear();
+            loopCounterForDebug = 0;
 
-        DFS(0, 0, bottleMaxCapacityC);
 
 
-        Iterator<Integer> iterator = answer.iterator();
-        while (iterator.hasNext()) {
-            Integer next = iterator.next();
-            System.out.printf("%d ", next);
+            st = new StringTokenizer(br.readLine(), " ");
+            bottleMaxCapacityA = Integer.parseInt(st.nextToken());
+            bottleMaxCapacityB = Integer.parseInt(st.nextToken());
+            bottleMaxCapacityC = Integer.parseInt(st.nextToken());
+
+            DFS(0, 0, bottleMaxCapacityC);
+
+            List<Integer> result = new ArrayList<>(answer);
+            result.sort(Comparator.comparingInt(Integer::intValue));
+            for (int j = 0; j < result.size(); j++) {
+                System.out.printf("%d ", result.get(j));
+            }
+            System.out.println("");
         }
 
     }
@@ -92,12 +101,12 @@ class Main {
         bottleSnapShotQueue.add(new BottleSnapShot(a, b, c));
 
         while (!bottleSnapShotQueue.isEmpty()) {
-//            loopCounterForDebug++;
+            loopCounterForDebug++;
             BottleSnapShot snapShot = bottleSnapShotQueue.poll();
 
-//            if(snapShot.bottleA + snapShot.bottleB + snapShot.bottleC != 10){
-//                System.out.println("debug");
-//            }
+            if(snapShot.bottleA + snapShot.bottleB + snapShot.bottleC != bottleMaxCapacityC){
+                System.out.println("debug");
+            }
 
             if (enqueueState[snapShot.bottleA][snapShot.bottleB][snapShot.bottleC]) continue;
             else enqueueState[snapShot.bottleA][snapShot.bottleB][snapShot.bottleC] = true;
@@ -135,12 +144,6 @@ class Main {
             }
 
 
-            //c -> a
-            if (snapShot.bottleC + snapShot.bottleA > bottleMaxCapacityA) {
-                bottleSnapShotQueue.add(new BottleSnapShot(bottleMaxCapacityA, snapShot.bottleB, snapShot.bottleC + (snapShot.bottleA - bottleMaxCapacityA)));
-            } else {
-                bottleSnapShotQueue.add(new BottleSnapShot(snapShot.bottleA + snapShot.bottleC, snapShot.bottleB, 0));
-            }
 
             //c -> b
             if (snapShot.bottleB + snapShot.bottleC > bottleMaxCapacityB) {
@@ -149,6 +152,12 @@ class Main {
                 bottleSnapShotQueue.add(new BottleSnapShot(snapShot.bottleA, snapShot.bottleC + snapShot.bottleB, 0));
             }
 
+            //c -> a
+            if (snapShot.bottleC + snapShot.bottleA > bottleMaxCapacityA) {
+                bottleSnapShotQueue.add(new BottleSnapShot(bottleMaxCapacityA, snapShot.bottleB, snapShot.bottleC + (snapShot.bottleA - bottleMaxCapacityA)));
+            } else {
+                bottleSnapShotQueue.add(new BottleSnapShot(snapShot.bottleA + snapShot.bottleC, snapShot.bottleB, 0));
+            }
 
         }
 

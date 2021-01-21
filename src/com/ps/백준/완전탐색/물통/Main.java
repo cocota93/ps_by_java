@@ -68,7 +68,7 @@ class Main {
     static int loopCounterForDebug;
 
     public static void main(String[] args) throws Exception {
-        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/물통/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/물통/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
@@ -93,12 +93,12 @@ class Main {
         bottleSnapShotQueue.add(new BottleSnapShot(a,b,c));
 
         while(!bottleSnapShotQueue.isEmpty()){
-            loopCounterForDebug++;
+//            loopCounterForDebug++;
             BottleSnapShot snapShot = bottleSnapShotQueue.poll();
 
-            if(snapShot.bottleA + snapShot.bottleB + snapShot.bottleC != 10){
-                System.out.println("debug");
-            }
+//            if(snapShot.bottleA + snapShot.bottleB + snapShot.bottleC != 10){
+//                System.out.println("debug");
+//            }
 
             if(enqueueState[snapShot.bottleA][snapShot.bottleB][snapShot.bottleC]) continue;
             else enqueueState[snapShot.bottleA][snapShot.bottleB][snapShot.bottleC] = true;
@@ -132,7 +132,7 @@ class Main {
             if(snapShot.bottleB + snapShot.bottleC > bottleMaxCapacityC){
                 bottleSnapShotQueue.add(new BottleSnapShot(snapShot.bottleA, snapShot.bottleB + (snapShot.bottleC - bottleMaxCapacityC), bottleMaxCapacityC));
             }else{
-                bottleSnapShotQueue.add(new BottleSnapShot(snapShot.bottleA,0, bottleMaxCapacityC));
+                bottleSnapShotQueue.add(new BottleSnapShot(snapShot.bottleA,0, snapShot.bottleB + snapShot.bottleC));
             }
 
 
@@ -147,7 +147,7 @@ class Main {
             if(snapShot.bottleB + snapShot.bottleC > bottleMaxCapacityB){
                 bottleSnapShotQueue.add(new BottleSnapShot(snapShot.bottleA, bottleMaxCapacityB, snapShot.bottleC + (snapShot.bottleB - bottleMaxCapacityB)));
             }else{
-                bottleSnapShotQueue.add(new BottleSnapShot(snapShot.bottleA,bottleMaxCapacityB, 0));
+                bottleSnapShotQueue.add(new BottleSnapShot(snapShot.bottleA, snapShot.bottleC + snapShot.bottleB, 0));
             }
 
 

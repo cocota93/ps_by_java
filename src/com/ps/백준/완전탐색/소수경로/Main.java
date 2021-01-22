@@ -25,10 +25,16 @@ import java.util.stream.Collectors;
 * bfs로 구현할떄 재귀 사용없이 그냥 for로 처리하니까 변환횟수 관리가 번거로워진다.
 * */
 
+/*
+* 처음부터 방향을 아에 잘못잡았다. 난 각 자릿수의 합이 1차이나는것들을 찾으면 될거라 생각했는데 그게 아니였다. 반례) 1033의 합은 7, 1016의 합은 8 하지만 2개이상 다름.
+* */
+
 class Main {
 
     static List<Integer> primeNumbers = new ArrayList<>();
     static boolean[] visited = new boolean[10000];
+    static int destPassword;
+    static int result = Integer.MAX_VALUE;
 
     public static void main(String[] args) throws Exception {
         System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/소수경로/input.txt"));
@@ -54,29 +60,45 @@ class Main {
         for (int i = 0; i < T; i++) {
             st = new StringTokenizer(br.readLine(), " ");
             int startPassword = Integer.parseInt(st.nextToken());
-            int destPassword = Integer.parseInt(st.nextToken());
+            destPassword = Integer.parseInt(st.nextToken());
 
-            int searchCount = 0;
-            Queue<Integer> queue = new LinkedList();
-            queue.add(startPassword);
-            for (; !queue.isEmpty(); ) {
-                int calPassword = queue.poll();
+            int depth = 0;
+            BFS(startPassword, depth);
 
-                if(calPassword == destPassword) break;
-                if(visited[calPassword] == true) continue;
-                else visited[calPassword] = true;
+            System.out.println(result);
+        }
 
+    }
 
-                //방문예정
-                int baseSum = Arrays.stream(String.valueOf(calPassword).split("")).map(Integer::valueOf).reduce(0, Integer::sum);
-                queue.addAll(primeNumbers.stream().filter(prime -> prime == baseSum + 1).collect(Collectors.toList()));
-                queue.addAll(primeNumbers.stream().filter(prime -> prime == baseSum - 1).collect(Collectors.toList()));
+    private static void BFS(int tryPassword, int depth) {
+        if(visited[tryPassword] == true) return;
 
-                searchCount++;
+        Queue<Integer> queue = new LinkedList();
+        queue.add(tryPassword);
+        visited[tryPassword] = true;
+
+        for (; !queue.isEmpty(); ) {
+            int calPassword = queue.poll();
+            if(calPassword == destPassword) {
+                result = depth;
+                return;
+            } else{
+                depth++;
             }
 
-            System.out.println(searchCount);
+
+            //방문예정
+            int baseSum = Arrays.stream(String.valueOf(calPassword).split("")).map(Integer::valueOf).reduce(0, Integer::sum);
+            List<Integer> nextPlusPasswordCandi = primeNumbers.stream().filter(prime -> prime == baseSum + 1 || prime == baseSum - 1).collect(Collectors.toList());
+            for (Integer candidate : nextPlusPasswordCandi) {
+                if(visited[candidate] == true) continue;
+
+                visited[candidate] = true;
+                queue.add(candidate);
+            }
         }
+
+
 
     }
 

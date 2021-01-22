@@ -92,6 +92,7 @@ class Main {
                     visited[resultR] = true;
                 }
 
+                if(visited[destNumber] == true) break;
             }
 
 

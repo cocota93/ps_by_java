@@ -36,6 +36,7 @@ class Main {
     static Vertex nextSpacePosList[];
     static boolean visitSpacePosList[];
     static boolean resultRender = false;
+    static int depthForDebug = Integer.MIN_VALUE;
 
     public static void main(String[] args) throws Exception {
 //        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/스도쿠/input.txt"));
@@ -69,9 +70,17 @@ class Main {
 
         int depth = 0;
         Recur(depth);
+
+//        System.out.println(depthForDebug);
     }
 
     private static boolean Recur(int depth) {
+
+//        depthForDebug = Math.max(depthForDebug, depth);
+//        if(depthForDebug == 16){
+//            System.out.println("debug");
+//        }
+
         if (spaceCount == depth) {
 
             if(resultRender) return true;
@@ -88,31 +97,34 @@ class Main {
             return true;
         }
 
-        for (int i = depth; i < nextSpacePosList.length; i++) {
-            //방문 확인 할필요가 없을것 같은데?? depth가 항상 플러스 된채로 접근하니까?
-            Vertex vertex = nextSpacePosList[depth];
+        //방문 확인 할필요가 없을것 같은데?? depth가 항상 플러스 된채로 접근하니까?
+        Vertex vertex = nextSpacePosList[depth];
 
-            for (int j = 1; j < 10; j++) {
-                //보드에 값 채우고
-                board[vertex.y][vertex.x] = j;
+        for (int j = 1; j < 10; j++) {
+            //보드에 값 채우고
+            board[vertex.y][vertex.x] = j;
 
-                //3x3크기 체크..체크 목적은 중복만 체크하면됨.
-                if (CheckDuplicate3by3(vertex.y, vertex.x)) continue;
+            //3x3크기 체크..체크 목적은 중복만 체크하면됨.
+            if (CheckDuplicate3by3(vertex.y, vertex.x)) continue;
 
-                //좌우 일직선 확인
-                if (CheckDuplicateRow(vertex.x)) continue;
-                if (CheckDuplicateCol(vertex.y)) continue;
+            //좌우 일직선 확인
+            if (CheckDuplicateRow(vertex.x)) continue;
+            if (CheckDuplicateCol(vertex.y)) continue;
 
-                // 재귀 호출
-                boolean resultRender = Recur(depth + 1);
-                if (resultRender) {
-                    return false;
-                }
-
-                //보드에 값 채웠던걸 다시 지워줘야 하려나?안지워도 똑같은 순서로 다른숫자 넣어서 진행될테니 필요없을듯
-//                board[vertex.y][vertex.x] = j
+            // 재귀 호출
+            boolean resultRender = Recur(depth + 1);
+            if (resultRender) {
+                return true;
             }
+
+            //보드에 값 채웠던걸 다시 지워줘야 하려나?안지워도 똑같은 순서로 다른숫자 넣어서 진행될테니 필요없을듯
+            //-> 지워줘야함ㅡㅡ.근데 여기 말고 for나가서 지워줘야함.
+            // 안에서 해버리면 루프가 끝까지 다돌아서 자연스럽게 함수 끝났을때는 제대로 안지워짐.
+//            board[vertex.y][vertex.x] = 0;
         }
+
+        board[vertex.y][vertex.x] = 0;
+
 
         return false;
     }

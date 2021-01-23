@@ -1,10 +1,7 @@
-package com.ps.백준.N_Queen;
+package com.ps.백준.완전탐색.N_Queen;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Scanner;
-import java.io.FileInputStream;
 import java.util.StringTokenizer;
 
 /*
@@ -40,7 +37,7 @@ class Main {
     static int resultCount;
 
     public static void main(String[] args) throws Exception {
-        System.setIn(new FileInputStream("src/com/ps/백준/N_Queen/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/N_Queen/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;

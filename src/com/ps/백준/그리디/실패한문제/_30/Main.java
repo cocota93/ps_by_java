@@ -1,8 +1,7 @@
-package com.ps.백준.그리디._30;
+package com.ps.백준.그리디.실패한문제._30;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 import java.io.FileInputStream;
 import java.util.StringTokenizer;
 

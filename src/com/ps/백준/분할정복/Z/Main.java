@@ -4,6 +4,21 @@ import java.io.*;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+/*
+* 시간초과 발생. 중간에 불필요한걸 건너 뛰어야 통과할수 있을듯한데...뭐가 있을려나
+* 굳이 다 탐색해보지 않고 수식을 만들어서 구할수 있지 않을까??
+* -> 수식으로 만들어볼려고 했지만 잘 안됨. 그리고 이건 분할정복 문제임 ㅡㅡ
+* 재귀호출 외에는 별다른 로직도 없는데 시간초과? 그러면 재귀를 쓰면 안된다는 말로 봐야될것같은데...
+* 분할하는 방법이 틀린걸까?
+*
+*
+* 예제기준으로 n은 3. 칸수는 64칸. 64칸은 2^6
+* */
+
+/*
+* 못풀겠어서 풀이를 찾아봤다. 풀이가 제대로 이해되지는 않지만 중요한 포인트만 가져와서 내식대로 짜면 될것같다.
+* 익숙하지 않은 유형이라 그렇지 충분히 풀만한 문제인것 같다.
+* */
 
 class Main {
 
@@ -28,7 +43,7 @@ class Main {
         Recur(sideLength, baseRow, baseCol);
 
 
-        bw.write("" + sequence);
+//        bw.write("" + sequence);
         bw.flush();
         bw.close();
 
@@ -41,7 +56,7 @@ class Main {
                 return true;
             }
 
-//            System.out.println("R : " + baseRow + ", C : " + baseCol + ", sequence : " + sequence);
+            System.out.println("R : " + baseRow + ", C : " + baseCol + ", sequence : " + sequence);
             sequence++;
 
             return false;

@@ -1,25 +1,10 @@
-package com.ps.백준.자료구조.집합의표현;
+package com.ps.샘플코드.유니온파인드;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-/*
-* 정확히 어떻게 풀어야할지는 모르겠지만
-* dfs, bfs를 이용하는 문제 아닌가? 하는 생각이 스쳐지나간다.
-* -> '유니온 파인드' 라는것을 이용해야 한다고 한다.
-* */
-
-/*
-* 처음에 유니온파인드 개념 확인후 구현해볼떄 누가 더 부모인지 순서를 두는게 의미가 있다고 생각해서
-* 그렇게 구현했다가 순서가 무의미하게 바꿨는데
-* 지금 되돌아보니 문제에서 특별한 제약사항을 주는게 아니라면 순서는 무의미한게 맞는것같다.
-* 특히 find함수에서 해당 노드가 가장 최상위 노드를 가리키도록 하는 코드떄문에 그렇다.
-* */
-
-
-class Main {
+class 유니온파인드 {
 
     public static void main(String[] args) throws Exception {
 //        System.setIn(new FileInputStream("src/com/ps/백준/자료구조/집합의표현/input.txt"));

@@ -1,9 +1,8 @@
-package com.ps.백준.이진탐색.공유기설치;
+package com.ps.백준.이진탐색.풀지못한문제.공유기설치;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
 import java.io.FileInputStream;
 import java.util.StringTokenizer;
 

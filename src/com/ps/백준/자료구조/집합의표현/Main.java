@@ -1,6 +1,7 @@
 package com.ps.백준.자료구조.집합의표현;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
@@ -23,7 +24,7 @@ class Main {
         st = new StringTokenizer(br.readLine(), " ");
         int n = Integer.parseInt(st.nextToken());
         int container[] = new int[n + 1];
-        for (int i = 0; i < container.length; i++) {
+        for (int i = 0; i < container.length ; i++) {
             container[i] = i;
         }
         int commandCount = Integer.parseInt(st.nextToken());
@@ -31,13 +32,13 @@ class Main {
         for (int i = 0; i < commandCount; i++) {
             st = new StringTokenizer(br.readLine(), " ");
             int command = Integer.parseInt(st.nextToken());//0은 합집합으로 만들기, 1은 합집합인지 확인하기
-            int parent = Integer.parseInt(st.nextToken());
-            int child = Integer.parseInt(st.nextToken());
+            int node1 = Integer.parseInt(st.nextToken());
+            int node2 = Integer.parseInt(st.nextToken());
 
             if(command == 0){
-                doUnion(container, parent, child);
+                doUnion(container, node1, node2);
             }else if(command == 1){
-                boolean isSame = isSampParent(container, parent, child);
+                boolean isSame = isSampParent(container, node1, node2);
 
                 if(isSame){
                     System.out.println("YES");
@@ -60,21 +61,16 @@ class Main {
         return container[node];
     }
 
-    private static void doUnion(int[] container, int hopeParent, int hopeChild) {
-        if (isUnion(container, hopeParent, hopeChild)) return;
+    private static void doUnion(int[] container, int node1, int node2) {
+        //요부분이 제출실패의 주요 원인이었음. find호출하면서 node의 부모가 새로 갱신될수 있고
+        //기존에 다른 것들과 합집합이었다면 최상위끼리 계산해야 하는데 그렇게 하지 않았음.
+        int node1Parent = find(container, node1);
+        int node2Parent = find(container, node2);
 
-        container[hopeParent] = hopeParent;
-        container[hopeChild] = hopeParent;
+        if (node1Parent == node2Parent) return;
+        container[Math.max(node1Parent,node2Parent)] = Math.min(node1Parent,node2Parent);
     }
 
-    private static boolean isUnion(int[] container, int hopeParent, int hopeChild) {
-        //두 집합중 더 부모가 되고싶은 녀석을 hopeParent라고 한다.
-        //hopeParent의 부모가 자신이면서 hopeChild와 같은 부모를 가질경우 이미 합쳐져있는것.
-        int finalParent = find(container, hopeParent);
-        if(isSampParent(container, hopeParent, hopeChild) && finalParent == hopeParent) return true;
-
-        return false;
-    }
 
     private static boolean isSampParent(int[] container, int node1, int node2) {
         int parent1 = find(container, node1);

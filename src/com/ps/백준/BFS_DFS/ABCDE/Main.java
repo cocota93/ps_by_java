@@ -3,6 +3,8 @@ package com.ps.백준.BFS_DFS.ABCDE;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /*
@@ -25,8 +27,8 @@ import java.util.StringTokenizer;
 class Main {
     static int n;
     static int m;
-    static boolean relationTable[][];
-    static boolean visited[][];
+    static List<Integer> relationList[];
+    static boolean visited[];
 
     static StringBuilder sb = new StringBuilder();
 
@@ -41,25 +43,31 @@ class Main {
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
 
-        int arrSize = Math.max(n, m);
+        visited = new boolean[n];
+        relationList = new List[n];
+        for (int i = 0; i < n; i++) {
+            relationList[i] = new ArrayList<>();
+        }
 
-        relationTable = new boolean[arrSize][arrSize];
-        visited = new boolean[arrSize][arrSize];
         for (int i = 0; i < m; i++) {
             st = new StringTokenizer(br.readLine(), " ");
-            int from = Integer.parseInt(st.nextToken());
-            int to = Integer.parseInt(st.nextToken());
-            relationTable[from][to] = relationTable[to][from] = true;
+            int v1 = Integer.parseInt(st.nextToken());
+            int v2 = Integer.parseInt(st.nextToken());
+
+            relationList[v1].add(v2);
+            relationList[v2].add(v1);
         }
 
         int depth = 0;
         for (int start = 0; start < n; start++) {
+            visited[start] = true;
             if(DFS(depth, start)){
                 break;
             }
+            visited[start] = false;
         }
 
-        System.out.println(sb.length());
+        System.out.println(sb.length() == 0 ? 0 : 1);
     }
 
     private static boolean DFS(int depth, int from) {
@@ -68,15 +76,15 @@ class Main {
             return true;
         }
 
-        for (int to = 0; to < relationTable.length; to++) {
-            if(!relationTable[from][to]) continue;
-            if(visited[from][to]) continue;
 
-            visited[from][to] = visited[to][from] = true;
+        for (Integer to : relationList[from]) {
+            if(visited[to]) continue;
+
+            visited[to] = true;
             if(DFS(depth + 1, to)){
                 return true;
             }
-            visited[from][to] = visited[to][from] = false;
+            visited[to] = false;
 
         }
 

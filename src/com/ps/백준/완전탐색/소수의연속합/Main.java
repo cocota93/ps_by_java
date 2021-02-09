@@ -3,11 +3,8 @@ package com.ps.백준.완전탐색.소수의연속합;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.io.FileInputStream;
-import java.util.StringTokenizer;
 
 
 
@@ -27,6 +24,7 @@ import java.util.StringTokenizer;
 class Main {
 
     static List<Integer> primeList = new ArrayList<>();
+    static boolean[] primeFilter;
 
     public static void main(String[] args) throws Exception {
 //        System.setIn(new FileInputStream("src/com/ps/백준/완전탐색/소수의연속합/input.txt"));
@@ -36,39 +34,36 @@ class Main {
 
 
         int n = Integer.parseInt(br.readLine());
-        boolean inputIsPrime = false;
+        primeFilter = new boolean[n + 1];
+        Arrays.fill(primeFilter,true);
 
-        for (int i = 2; i <= n; i++) {
-            boolean isPrime = true;
-            for (Integer prime : primeList) {
-                if (i % prime == 0){
-                    isPrime = false;
-                    break;
-                }
+        primeFilter[0] = false;
+        primeFilter[1] = false;
+        for (int i = 2; i * i <= n; i++) {
+            if(primeFilter[i] == false){
+                continue;
             }
 
-            if(isPrime) {
-                primeList.add(i);
-                if(i == n){
-                    inputIsPrime = true;
-                }
+            for (int j = i + i; j <= n ; j += i) {
+                primeFilter[j] = false;
             }
         }
 
-
-
-
-        if(!inputIsPrime){
-            System.out.println(0);
-            return;
+        for (int i = 0; i < primeFilter.length; i++) {
+            if(primeFilter[i]) primeList.add(i);
         }
-
-
-
 
 //        for (Integer integer : primeList) {
 //            System.out.println(integer);
 //        }
+
+
+//        if(primeFilter[n] == false){
+//            System.out.println(0);
+//            return;
+//        }
+
+
 
         int s = 0;
         int e = 0;

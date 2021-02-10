@@ -63,39 +63,45 @@ class Main {
             D[i] = Long.parseLong(st.nextToken());
         }
 
-        List<Long> combList1 = new ArrayList<>(n * n);
-        List<Long> combList2 = new ArrayList<>(n * n);
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                long sum1 = A[i] + B[j];
-                long sum2 = C[i] + D[j];
-                combList1.add(sum1);
-                combList2.add(sum2);
+        long combList1[] = new long[n * n];
+        long combList2[] = new long[n * n];
+        {
+            int k = 0;
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    long sum1 = A[i] + B[j];
+                    long sum2 = C[i] + D[j];
+                    combList1[k] = sum1;
+                    combList2[k] = sum2;
+                    k++;
+                }
             }
+
         }
-        combList1.sort(Comparator.comparingLong(Long::longValue));
-        combList2.sort(Comparator.comparingLong(Long::longValue));
+
+        Arrays.sort(combList1);
+        Arrays.sort(combList2);
 
 
         int leftIdx = 0;
-        int rightIdx = combList2.size() - 1;
+        int rightIdx = combList2.length - 1;
         long answer = 0;
 
-        while(leftIdx < combList1.size() && rightIdx >= 0){
+        while(leftIdx < combList1.length && rightIdx >= 0){
 
-            long leftSearchValue = combList1.get(leftIdx);
-            long rightSearchValue = combList2.get(rightIdx);
+            long leftSearchValue = combList1[leftIdx];
+            long rightSearchValue = combList2[rightIdx];
             long sum = leftSearchValue + rightSearchValue;
             if(sum == 0){
 
                 long leftEqualCount = 0;
-                while(leftIdx < combList1.size() && combList1.get(leftIdx) == leftSearchValue){
+                while(leftIdx < combList1.length && combList1[leftIdx] == leftSearchValue){
                     leftIdx++;
                     leftEqualCount++;
                 }
 
                 long rightEqualCount = 0;
-                while(rightIdx >= 0 && combList2.get(rightIdx) == rightSearchValue){
+                while(rightIdx >= 0 && combList2[rightIdx] == rightSearchValue){
                     rightIdx--;
                     rightEqualCount++;
                 }

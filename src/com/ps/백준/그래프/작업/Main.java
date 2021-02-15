@@ -1,9 +1,10 @@
 package com.ps.백준.그래프.작업;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.*;
-import java.io.FileInputStream;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 /*
 * 그림을 그려보니 큐에 넣어서 어떻게 해야할것같긴한데 실제 구현을 어떤식으로 해야할지 모르겠네
@@ -35,59 +36,100 @@ import java.io.FileInputStream;
 * */
 
 
+/*
+* 위상정렬의 기본 개념중 진입차수와 진출차수라는게 있다
+* 진입차수(in-degree) : 특정 정점으로 들어오는 간선의 수
+* 진출차수(out-degree) : 특정 정점에서 밖으로 나가는 간선의 수
+*
+*
+* 출처 : https://steady-coding.tistory.com/182
+*
+* 답안코드 보고 따라구현했는데 그래도 어렵게 느껴진다.
+* 비슷한 문제를 더 풀어봐야할듯.
+* */
+
 
 
 class Main {
 
-    static class Work{
-        int timeCost;
-        int workNumber;
-        int refCount; //현재 자신을 가리키고 있는 수
-        Queue<Integer> needPreCompleteQueue = new LinkedList<>();//자신의 후행 리스트
-    }
-
+    static int n;
+    static int indegree[];
+    static int timeCost[];
+    static ArrayList<ArrayList<Integer>> edgeGraph;
 
     public static void main(String[] args) throws Exception {
-        System.setIn(new FileInputStream("src/com/ps/백준/그래프/작업/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/그래프/작업/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
 
-        int n = Integer.parseInt(br.readLine());
-        List<Work> workQueue = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            Work work = new Work();
-            work.workNumber = i + 1;
-            workQueue.add(work);
+        n = Integer.parseInt(br.readLine());
+        edgeGraph = new ArrayList<>();//자신을 가리키는 정점들의 리스트를 갖게된다.
+        for (int i = 0; i < n + 1; i++) {
+            edgeGraph.add(new ArrayList<>());
         }
 
+        indegree = new int[n + 1];
+        timeCost = new int[n + 1];
 
-        for (int i = 0; i < n; i++) {
+        for (int startVertex = 1; startVertex < n + 1; startVertex++) {
             st = new StringTokenizer(br.readLine(), " ");
-            Work work = workQueue.get(i);
 
-            int needTimeCost = Integer.parseInt(st.nextToken());
-            work.timeCost = needTimeCost;
+            timeCost[startVertex] = Integer.parseInt(st.nextToken());
 
-            int needAlreadyCompleteCount = Integer.parseInt(st.nextToken());
-            work.refCount = needAlreadyCompleteCount;
-            for (int j = 0; j < needAlreadyCompleteCount; j++) {
-                int preWorkNumber = Integer.parseInt(st.nextToken());
-                Work preWork = workQueue.get(preWorkNumber);
-                preWork.needPreCompleteQueue.add(work.workNumber);
+            int count = Integer.parseInt(st.nextToken());
+            for (int j = 0; j < count; j++) {
+                int endVertex = Integer.parseInt(st.nextToken());
+                edgeGraph.get(endVertex).add(startVertex);
+                indegree[startVertex]++;
+            }
+        }
+
+        int answer = topologicalSort();
+        bw.write(answer + "");
+
+        bw.flush();
+        bw.close();
+    }
+
+    private static int topologicalSort() {
+        Queue<Integer> q = new LinkedList<>();
+
+        int result[] = new int[n + 1];
+        for (int i = 1; i < n + 1; i++) {
+            result[i] = timeCost[i];//해당 작업을 완료하는데 필요한 최소시간
+
+            if(indegree[i] == 0){ //진입차수가 0인것. 선행작업이 없어서 가장 먼저 시작하는 녀석들 인큐.
+                q.add(i);
             }
         }
 
 
-        while(workQueue.isEmpty()){
+        while(!q.isEmpty()){
+            int now = q.poll();
 
+            for (Integer head : edgeGraph.get(now)) {
 
+                indegree[head]--;
+
+                //head번의 일을 완료하는데 필요한 시간이 더 긴게 있다면 거기에 따라가야하므로
+                //기존꺼와 새로운거를 비교하여 더 큰걸로 적용.
+                result[head] = Math.max(result[head], result[now] + timeCost[head]);
+
+                if(indegree[head] == 0){
+                    q.add(head);
+                }
+                
+            }
 
         }
 
+        int answer = 0;
+        for (int i = 0; i < result.length; i++) {
+            answer = Math.max(answer, result[i]);
+        }
 
-
-
+        return answer;
     }
 
 }

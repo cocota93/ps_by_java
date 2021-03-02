@@ -2,11 +2,8 @@ package com.ps.백준.그래프.네트워크연결;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.io.FileInputStream;
-import java.util.StringTokenizer;
 
 
 /*
@@ -26,14 +23,25 @@ import java.util.StringTokenizer;
 
 class Main {
 
-    static int edgeCost[][];
-    static List<Integer> edgeGraph[];
+    //cost를 기준으로 우선순위큐를 사용할거고
+    //cost만 알고있다면 어디로부터 연결되었는지는 알 필요 없기 떄문에
+    //from이 없어도 됨.
+    static class Edge{
+        int to;
+        int cost;
 
-    static int resultCost[];
+        public Edge(int to, int cost) {
+            this.to = to;
+            this.cost = cost;
+        }
+    }
+
+    static List<Edge> edgeGraph[];
     static boolean visited[];
 
+
     public static void main(String[] args) throws Exception {
-        System.setIn(new FileInputStream("src/com/ps/백준/그래프/네트워크연결/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/그래프/네트워크연결/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
@@ -43,7 +51,6 @@ class Main {
         for (int i = 1; i < edgeGraph.length; i++) {
             edgeGraph[i] = new ArrayList<>();
         }
-        edgeCost = new int[n + 1][n + 1];
 
         int m = Integer.parseInt(br.readLine());
         for (int i = 0; i < m; i++) {
@@ -53,41 +60,39 @@ class Main {
             int v2 = Integer.parseInt(st.nextToken());
             int cost = Integer.parseInt(st.nextToken());
 
-
-            if(v1 == v2) continue;
-            //v1과 v2가 같을수 있다고하는데 만약에 같을경우 간선이 없다고 처리하거나 cost를 0으로 처리하고 넘어가면 안되나??
-
-            if(edgeCost[v1][v2] > 0){
-                edgeCost[v1][v2] = edgeCost[v2][v1] = Math.min(edgeCost[v1][v2], cost);
-            } else{
-                edgeCost[v1][v2] = edgeCost[v2][v1] = cost;
-                edgeGraph[v1].add(v2);
-                edgeGraph[v2].add(v1);
-            }
+            edgeGraph[v1].add(new Edge(v2, cost));
+            edgeGraph[v2].add(new Edge(v1, cost));
         }
 
 
-        resultCost = new int[n + 1];
-        Arrays.fill(resultCost, Integer.MAX_VALUE);
+
+
         visited = new boolean[n + 1];
-
+        Queue<Edge> openList = new PriorityQueue<>(Comparator.comparingInt(edge -> edge.cost));
         //시작지점을 어떻게 잡지?
-
-        for (int v1 = 1; v1 < resultCost.length; v1++) {
-
-            visited[v1] = true;
-//            resultCost[v1] = 0;
-
-            for (Integer v2 : edgeGraph[v1]) {
-//                resultCost[v2] = Math.min(resultCost[v2], edgeCost[v1][v2]);
-
-            }
-
+        //-> 모든컴퓨터는 반드시 연결된다고 했으니까 그냥 첫번쨰부터 시작했으면 됬었음.
+//         첫번쨰가 아니여도 풀수는 있겠지만 컴퓨터의 수가 최소 1개 이므로 첫번째부터 하는게 깔끔.
+        visited[1] = true;
+        for (Edge nextEdge : edgeGraph[1]) {
+            openList.add(nextEdge);
         }
 
 
+        long answer = 0;
+        while(!openList.isEmpty()){
+            Edge edge = openList.poll();
+            if(visited[edge.to]) continue;
 
+            visited[edge.to] = true;
+            for (Edge nextEdge : edgeGraph[edge.to]) {
 
+                openList.add(nextEdge);
+            }
+
+            answer += edge.cost;
+        }
+
+        System.out.println(answer);
 
     }
 

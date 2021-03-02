@@ -44,10 +44,11 @@ class 유니온파인드 {
     }
 
     private static int find(int[] container, int node) {
-        if(container[node] == node){
+        if(container[node] == node){//해당노드가 최상위 노드를 의미.
             return node;
         }
 
+        //하위노드도 똑같은 노드를 가리키도록 변경시켜줌.
         container[node] = find(container, container[node]);
         return container[node];
     }

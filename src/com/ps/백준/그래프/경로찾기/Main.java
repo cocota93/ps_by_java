@@ -2,8 +2,9 @@ package com.ps.백준.그래프.경로찾기;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Scanner;
-import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /*
@@ -18,45 +19,89 @@ import java.util.StringTokenizer;
 
 class Main {
 
-    static boolean board[][];
+    static List<Integer> board[];
+    static boolean visitCheck[];
+    static boolean pathExist[][];
 
     public static void main(String[] args) throws Exception {
-        System.setIn(new FileInputStream("src/com/ps/백준/그래프/경로찾기/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/그래프/경로찾기/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
 
 
         int n = Integer.parseInt(br.readLine());
-        board = new boolean[n][n];
+        board = new List[n];
+        for (int i = 0; i < board.length; i++) {
+            board[i] = new ArrayList<>();
+        }
+
+        visitCheck = new boolean[n];
+        pathExist = new boolean[n][n];
 
         for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine(), " ");
 
             for (int j = 0; j < n; j++) {
                 boolean isVertex = Integer.parseInt(st.nextToken()) == 1;
-                board[i][j] = isVertex;
+                if(isVertex){
+                    board[i].add(j);
+                }
             }
         }
 
-        int depth = 0;
-        dfs(depth);
+        for (int start = 0; start < board.length; start++) {
+            for (int end = 0; end < board.length; end++) {
+
+//                if(start == end) continue;
+
+//                if(start == 2 && end == 2){
+//                    System.out.println("debug");
+//                }
+
+                int prevPos = start;
+                visitCheck[start] = true;
+                dfs(0, start, end, prevPos);
+                Arrays.fill(visitCheck, false);
+            }
+        }
+
+
+        for (int i = 0; i < pathExist.length; i++) {
+            for (int j = 0; j < pathExist[0].length; j++) {
+
+                if(pathExist[i][j]) System.out.print(1 + " ");
+                else System.out.print(0 + " ");
+            }
+            System.out.println();
+        }
     }
 
-    private static void dfs(int depth) {
+    private static void dfs(int depth, int startPos, int endPos, int prevPos) {
+
+//        if(depth != 0 && endPos == prevPos){
+//            pathExist[startPos][endPos] = true;
+//            return;
+//        }
 
         if(depth == board.length){
-
             return;
         }
 
-        for (int i = 0; i < board.length; i++) {
+
+        for (Integer nextPos : board[prevPos]) {
+            if(nextPos == endPos) {
+                pathExist[startPos][endPos] = true;
+                return;
+            }
+
+            if(visitCheck[nextPos]) continue;
+            visitCheck[nextPos] = true;
+
+            dfs(depth + 1, startPos, endPos, nextPos);
+            visitCheck[nextPos] = false;
 
         }
-
-//        for (boolean b : board[depth]) {
-//
-//        }
 
     }
 

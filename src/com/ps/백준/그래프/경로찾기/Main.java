@@ -2,10 +2,7 @@ package com.ps.백준.그래프.경로찾기;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /*
 * 한창 bfs관련 문제를 풀다가 이 문제를 만났더니 bfs가 떠올랐다.
@@ -50,21 +47,44 @@ class Main {
             }
         }
 
+
         for (int start = 0; start < board.length; start++) {
             for (int end = 0; end < board.length; end++) {
-
-//                if(start == end) continue;
-
-//                if(start == 2 && end == 2){
-//                    System.out.println("debug");
-//                }
-
-                int prevPos = start;
+                Queue<Integer> queue = new LinkedList<>();
+                queue.add(start);
                 visitCheck[start] = true;
-                dfs(0, start, end, prevPos);
-                Arrays.fill(visitCheck, false);
+
+                while(!queue.isEmpty()){
+
+                    Integer visitPlace = queue.poll();
+
+                    if(visitPlace == end){
+                        //경로찾음
+                        pathExist[start][end] = true;
+                        break;
+                    }
+
+                    for (Integer nextPlace : board[visitPlace]) {
+                        if(!visitCheck[nextPlace]){
+                            queue.add(nextPlace);
+                            visitCheck[nextPlace] = true;
+                        }
+                    }
+                }
+
             }
         }
+
+
+//        for (int start = 0; start < board.length; start++) {
+//            for (int end = 0; end < board.length; end++) {
+//
+//                int prevPos = start;
+//                visitCheck[start] = true;
+////                dfs(0, start, end, prevPos);
+//                Arrays.fill(visitCheck, false);
+//            }
+//        }
 
 
         for (int i = 0; i < pathExist.length; i++) {
@@ -76,33 +96,4 @@ class Main {
             System.out.println();
         }
     }
-
-    private static void dfs(int depth, int startPos, int endPos, int prevPos) {
-
-//        if(depth != 0 && endPos == prevPos){
-//            pathExist[startPos][endPos] = true;
-//            return;
-//        }
-
-        if(depth == board.length){
-            return;
-        }
-
-
-        for (Integer nextPos : board[prevPos]) {
-            if(nextPos == endPos) {
-                pathExist[startPos][endPos] = true;
-                return;
-            }
-
-            if(visitCheck[nextPos]) continue;
-            visitCheck[nextPos] = true;
-
-            dfs(depth + 1, startPos, endPos, nextPos);
-            visitCheck[nextPos] = false;
-
-        }
-
-    }
-
 }

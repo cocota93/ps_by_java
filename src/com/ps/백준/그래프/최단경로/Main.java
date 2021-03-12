@@ -2,9 +2,8 @@ package com.ps.백준.그래프.최단경로;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Scanner;
+import java.util.*;
 import java.io.FileInputStream;
-import java.util.StringTokenizer;
 
 
 /*
@@ -13,12 +12,24 @@ import java.util.StringTokenizer;
 * 방향이 있는 그래프
 *
 * 플로이드 알고리즘
-* -> 이라고 생각했지만 메모리 초과
+* -> 이라고 생각했지만 메모리 초과, 다익스트라로 풀어야하는듯
 * */
 
 class Main {
 
-    static int dist[][];
+    static class Vertex{
+        int place;
+        int cost;
+
+        public Vertex(int place, int cost) {
+            this.place = place;
+            this.cost = cost;
+        }
+    }
+
+    static List<Vertex> board[];
+    static boolean visitCheck[];
+    static int finalyCost[];
     static int INF = 987654321;
 
     public static void main(String[] args) throws Exception {
@@ -32,12 +43,15 @@ class Main {
         int v = Integer.parseInt(st.nextToken());
         int e = Integer.parseInt(st.nextToken());
 
-        dist = new int[v + 1][v + 1];
-        for (int i = 0; i < dist.length; i++) {
-            for (int j = 0; j < dist[0].length; j++) {
-                dist[i][j] = INF;
-            }
+        board = new List[v + 1];
+        for (int i = 0; i < board.length; i++) {
+            board[i] = new ArrayList<>();
         }
+
+        visitCheck = new boolean[v + 1];
+        finalyCost = new int[v + 1];
+        Arrays.fill(finalyCost, INF);
+
 
         int startVertex = Integer.parseInt(br.readLine());
 
@@ -47,37 +61,40 @@ class Main {
             int v2 = Integer.parseInt(st.nextToken());
             int cost = Integer.parseInt(st.nextToken());
 
-            dist[v1][v2] = Math.min(dist[v1][v2], cost);
+            board[v1].add(new Vertex(v2, cost));
         }
-        
-        
 
-        for (int k = 1; k <= v; k++) {
-            for (int i = 1; i <= v; i++) {
-                for (int j = 1; j <= v; j++) {
-                    if(dist[i][j] > dist[i][k] + dist[k][j]){
-                        dist[i][j] = dist[i][k] + dist[k][j];
-                    }
+
+        Queue<Vertex> nextPlaceQueue = new PriorityQueue<>(Comparator.comparingInt(vertex -> vertex.cost));
+        nextPlaceQueue.add(new Vertex(startVertex, 0));
+        finalyCost[startVertex] = 0;
+
+
+        while(!nextPlaceQueue.isEmpty()){
+            Vertex visitPlace = nextPlaceQueue.poll();
+
+            for (Vertex connectedPlace : board[visitPlace.place]) {
+                if(finalyCost[connectedPlace.place] > finalyCost[visitPlace.place] + connectedPlace.cost){
+                    finalyCost[connectedPlace.place] = finalyCost[visitPlace.place] + connectedPlace.cost;
+                    nextPlaceQueue.add(new Vertex(connectedPlace.place, finalyCost[connectedPlace.place]));
                 }
             }
+
         }
 
-        for (int i = 1; i < dist.length; i++) {
-            if(i == startVertex) {
+        for (int i = 1; i < finalyCost.length; i++) {
+            if(i == startVertex){
                 System.out.println(0);
                 continue;
             }
 
-            if(dist[startVertex][i] == INF){
+            if(finalyCost[i] == INF){
                 System.out.println("INF");
                 continue;
             }
 
-            System.out.println(dist[startVertex][i]);
+            System.out.println(finalyCost[i]);
         }
-
-
-
 
     }
 

@@ -1,11 +1,8 @@
 package com.ps.백준.그래프.궁금한민호;
 
-import sun.security.provider.certpath.Vertex;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.*;
-import java.io.FileInputStream;
+import java.util.StringTokenizer;
 
 
 /*
@@ -20,54 +17,84 @@ import java.io.FileInputStream;
 * 크루스칼 알고리즘은 유니온파인드를 이용하여 하나로 만들어가는 느낌
 * */
 
+
+/*
+* 잘 안풀리길래 찾아보니까 플로이드 알고리즘으로 푸는문제였음.
+* 문제에서 '모든 도시의 쌍으로..blahblah'할떄 알았어야 했던것 같은데...
+*
+* 풀이참고 : https://steady-coding.tistory.com/105
+* */
+
 class Main {
 
-    static class Vertex{
-        int end;
-        int cost;
 
-        public Vertex(int end, int cost) {
-            this.end = end;
-            this.cost = cost;
-        }
-    }
-
-
-    static List<Vertex> optimalDist[];
+    static int simpleDist[][];
+    static int optimalDist[][];
+    static int INF = 987654321;
 
     public static void main(String[] args) throws Exception {
-        System.setIn(new FileInputStream("src/com/ps/백준/그래프/궁금한민호/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/그래프/궁금한민호/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
 
         int n = Integer.parseInt(br.readLine());
-        optimalDist = new List[n + 1];
-        for (int i = 0; i < optimalDist.length; i++) {
-            optimalDist[i] = new ArrayList<>();
-        }
+        simpleDist = new int[n + 1][n + 1];
+        optimalDist = new int[n + 1][n + 1];
 
         for (int i = 1; i < optimalDist.length; i++) {
             st = new StringTokenizer(br.readLine(), " ");
             for (int j = 1; j < optimalDist.length; j++) {
                 int cost = Integer.parseInt(st.nextToken());
-                optimalDist[i].add(new Vertex(j,cost));
+                optimalDist[i][j] = cost;
+                simpleDist[i][j] = cost;
             }
         }
 
 
-        /*
-        * 방문한 지점에서 연결된 지점으로...
-        * 음 모르겠다.
-        * */
-        Queue<Vertex> pq = new PriorityQueue<>(Comparator.comparingInt(vertex -> vertex.cost));
-        while(!pq.isEmpty()){
-            Vertex visitPlace = pq.poll();
+        for (int k = 1; k < optimalDist.length; k++) {
+            for (int i = 1; i < optimalDist.length; i++) {
+                for (int j = 1; j < optimalDist.length; j++) {
 
-            for (Vertex connectedPlace : optimalDist[visitPlace.end]) {
+                    if(i == j) continue;
+                    if(i == k) continue;
+                    if(j == k) continue;
+
+
+                   if(optimalDist[i][j] > optimalDist[i][k] + optimalDist[k][j]){
+                        System.out.println(-1);
+                        return;
+                    }
+
+                   //if(optimalDist[i][j] == optimalDist[i][k] + optimalDist[k][j])
+                   //는 optimalDist[i][j]로 가는 경로에 중간경로 k가 있다는 의미 이니
+                   // 해당 k라는 지점을 살리기 위해 simpleDist[i][j]에 INF를 넣음으로써
+                   //원래 경로를 유추할수 있도록 한다.
+                   if(optimalDist[i][j] == optimalDist[i][k] + optimalDist[k][j]){
+                       simpleDist[i][j] = INF;
+                   }
+
+                }
             }
-
         }
+
+        int roadCount = 0;
+        int roadCostSum = 0;
+        for (int i = 1; i < simpleDist.length; i++) {
+
+            //모든 도로의 합을 구하라고 하는데 만들어진 simpleDist는 대칭행렬같은 모양을 띄기 떄문에
+            //절반만 더하기 위해서 아래와 같은 코드를 변경해야 했다.
+            //for (int j = 1; j < simpleDist.length; j++)
+            for (int j = i; j < simpleDist.length; j++) {
+                if (simpleDist[i][j] != INF) {
+                    roadCount++;
+                    roadCostSum += simpleDist[i][j];
+                }
+            }
+        }
+
+
+        System.out.println(roadCostSum);
 
     }
 

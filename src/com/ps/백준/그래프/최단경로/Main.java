@@ -3,7 +3,6 @@ package com.ps.백준.그래프.최단경로;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.*;
-import java.io.FileInputStream;
 
 
 /*
@@ -27,8 +26,7 @@ class Main {
         }
     }
 
-    static List<Vertex> board[];
-    static boolean visitCheck[];
+    static List<Vertex> simpleCost[];
     static int finalyCost[];
     static int INF = 987654321;
 
@@ -43,12 +41,11 @@ class Main {
         int v = Integer.parseInt(st.nextToken());
         int e = Integer.parseInt(st.nextToken());
 
-        board = new List[v + 1];
-        for (int i = 0; i < board.length; i++) {
-            board[i] = new ArrayList<>();
+        simpleCost = new List[v + 1];
+        for (int i = 0; i < simpleCost.length; i++) {
+            simpleCost[i] = new ArrayList<>();
         }
 
-        visitCheck = new boolean[v + 1];
         finalyCost = new int[v + 1];
         Arrays.fill(finalyCost, INF);
 
@@ -61,26 +58,11 @@ class Main {
             int v2 = Integer.parseInt(st.nextToken());
             int cost = Integer.parseInt(st.nextToken());
 
-            board[v1].add(new Vertex(v2, cost));
+            simpleCost[v1].add(new Vertex(v2, cost));
         }
 
 
-        Queue<Vertex> nextPlaceQueue = new PriorityQueue<>(Comparator.comparingInt(vertex -> vertex.cost));
-        nextPlaceQueue.add(new Vertex(startVertex, 0));
-        finalyCost[startVertex] = 0;
-
-
-        while(!nextPlaceQueue.isEmpty()){
-            Vertex visitPlace = nextPlaceQueue.poll();
-
-            for (Vertex connectedPlace : board[visitPlace.place]) {
-                if(finalyCost[connectedPlace.place] > finalyCost[visitPlace.place] + connectedPlace.cost){
-                    finalyCost[connectedPlace.place] = finalyCost[visitPlace.place] + connectedPlace.cost;
-                    nextPlaceQueue.add(new Vertex(connectedPlace.place, finalyCost[connectedPlace.place]));
-                }
-            }
-
-        }
+        Dijkstra(startVertex);
 
         for (int i = 1; i < finalyCost.length; i++) {
             if(i == startVertex){
@@ -96,6 +78,24 @@ class Main {
             System.out.println(finalyCost[i]);
         }
 
+    }
+
+    private static void Dijkstra(int startVertex) {
+        Queue<Vertex> nextPlaceQueue = new PriorityQueue<>(Comparator.comparingInt(vertex -> vertex.cost));
+        nextPlaceQueue.add(new Vertex(startVertex, 0));
+        finalyCost[startVertex] = 0;
+
+
+        while(!nextPlaceQueue.isEmpty()){
+            Vertex visitPlace = nextPlaceQueue.poll();
+
+            for (Vertex connectedPlace : simpleCost[visitPlace.place]) {
+                if(finalyCost[connectedPlace.place] > finalyCost[visitPlace.place] + connectedPlace.cost){
+                    finalyCost[connectedPlace.place] = finalyCost[visitPlace.place] + connectedPlace.cost;
+                    nextPlaceQueue.add(new Vertex(connectedPlace.place, finalyCost[connectedPlace.place]));
+                }
+            }
+        }
     }
 
 }

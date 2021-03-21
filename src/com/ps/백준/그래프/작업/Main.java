@@ -72,21 +72,21 @@ class Main {
         indegree = new int[n + 1];
         timeCost = new int[n + 1];
 
-        for (int startVertex = 1; startVertex < n + 1; startVertex++) {
+        for (int endVertex = 1; endVertex < n + 1; endVertex++) {
             st = new StringTokenizer(br.readLine(), " ");
 
-            timeCost[startVertex] = Integer.parseInt(st.nextToken());
+            timeCost[endVertex] = Integer.parseInt(st.nextToken());
 
             int count = Integer.parseInt(st.nextToken());
             for (int j = 0; j < count; j++) {
-                int endVertex = Integer.parseInt(st.nextToken());
-                edgeGraph.get(endVertex).add(startVertex);
-                indegree[startVertex]++;
+                int startVertex = Integer.parseInt(st.nextToken());
+                edgeGraph.get(startVertex).add(endVertex);
+                indegree[endVertex]++;
             }
         }
 
-        int answer = topologicalSort();
-        bw.write(answer + "");
+//        int answer = topologicalSort();
+//        bw.write(answer + "");
 
         bw.flush();
         bw.close();

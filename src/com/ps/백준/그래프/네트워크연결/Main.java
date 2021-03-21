@@ -1,9 +1,10 @@
 package com.ps.백준.그래프.네트워크연결;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.*;
 import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.AnnotatedWildcardType;
+import java.util.*;
 
 
 /*
@@ -23,21 +24,19 @@ import java.io.FileInputStream;
 
 class Main {
 
-    //cost를 기준으로 우선순위큐를 사용할거고
-    //cost만 알고있다면 어디로부터 연결되었는지는 알 필요 없기 떄문에
-    //from이 없어도 됨.
     static class Edge{
-        int to;
+        int v1;
+        int v2;
         int cost;
 
-        public Edge(int to, int cost) {
-            this.to = to;
+        public Edge(int v1, int v2, int cost) {
+            this.v1 = v1;
+            this.v2 = v2;
             this.cost = cost;
         }
     }
 
-    static List<Edge> edgeGraph[];
-    static boolean visited[];
+    static int unionGroupNumList[];
 
 
     public static void main(String[] args) throws Exception {
@@ -47,10 +46,8 @@ class Main {
         StringTokenizer st;
 
         int n = Integer.parseInt(br.readLine());
-        edgeGraph = new List[n + 1];
-        for (int i = 1; i < edgeGraph.length; i++) {
-            edgeGraph[i] = new ArrayList<>();
-        }
+        unionGroupNumList = new int[n + 1];
+        PriorityQueue<Edge> openList = new PriorityQueue<>(Comparator.comparingInt(edge -> edge.cost));
 
         int m = Integer.parseInt(br.readLine());
         for (int i = 0; i < m; i++) {
@@ -60,40 +57,55 @@ class Main {
             int v2 = Integer.parseInt(st.nextToken());
             int cost = Integer.parseInt(st.nextToken());
 
-            edgeGraph[v1].add(new Edge(v2, cost));
-            edgeGraph[v2].add(new Edge(v1, cost));
+            openList.add(new Edge(v1, v2, cost));
         }
 
-
-
-
-        visited = new boolean[n + 1];
-        Queue<Edge> openList = new PriorityQueue<>(Comparator.comparingInt(edge -> edge.cost));
-        //시작지점을 어떻게 잡지?
-        //-> 모든컴퓨터는 반드시 연결된다고 했으니까 그냥 첫번쨰부터 시작했으면 됬었음.
-//         첫번쨰가 아니여도 풀수는 있겠지만 컴퓨터의 수가 최소 1개 이므로 첫번째부터 하는게 깔끔.
-        visited[1] = true;
-        for (Edge nextEdge : edgeGraph[1]) {
-            openList.add(nextEdge);
+        for (int i = 0; i < unionGroupNumList.length; i++) {
+            unionGroupNumList[i] = i;
         }
 
-
-        long answer = 0;
-        while(!openList.isEmpty()){
-            Edge edge = openList.poll();
-            if(visited[edge.to]) continue;
-
-            visited[edge.to] = true;
-            for (Edge nextEdge : edgeGraph[edge.to]) {
-
-                openList.add(nextEdge);
-            }
-
-            answer += edge.cost;
-        }
+        int answer = kruskal(openList);
 
         System.out.println(answer);
+    }
 
+    private static int kruskal(PriorityQueue<Edge> openList) {
+        int answer = 0;
+        while(!openList.isEmpty()){
+            Edge edge = openList.poll();
+            if(isSameParent(edge.v1, edge.v2)) continue;
+
+            doUnion(edge.v1, edge.v2);
+            answer += edge.cost;
+        }
+        return answer;
+    }
+
+    static int findParent(int targetNode){
+        int curParent = unionGroupNumList[targetNode];
+        int topParent = unionGroupNumList[curParent];
+        if(curParent == topParent) return topParent;
+
+        unionGroupNumList[targetNode] = findParent(curParent);
+
+        return unionGroupNumList[targetNode];
+    }
+
+    static boolean doUnion(int targetNode1, int targetNode2){
+        int parent1 = findParent(targetNode1);
+        int parent2 = findParent(targetNode2);
+
+        if(parent1 == parent2) return false;
+
+        unionGroupNumList[Math.max(parent1, parent2)] = Math.min(parent1, parent2);
+        return true;
+    }
+
+    static boolean isSameParent(int targetNode1, int targetNode2){
+        int parent1 = findParent(targetNode1);
+        int parent2 = findParent(targetNode2);
+
+        return parent1 == parent2;
     }
 
 }

@@ -40,7 +40,7 @@ class Main {
     static int answer = 999;
 
     public static void main(String[] args) throws Exception {
-//        System.setIn(new FileInputStream("src/com/ps/백준/sds스터디/_9주차/감시/input.txt"));
+        System.setIn(new FileInputStream("src/com/ps/백준/sds스터디/_9주차/감시/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
@@ -108,7 +108,8 @@ class Main {
         for (CCTV cctv : cctvList) {
             int front = cctv.dir;
             int right = (cctv.dir + 1) % 4;
-            int left = (4 - Math.abs((cctv.dir - 1))) % 4;
+//            int left = (4 - Math.abs((cctv.dir - 1))) % 4;
+            int left = (cctv.dir + 3) % 4;
             int rear = (cctv.dir + 2) % 4;
 
             if(cctv.type == 1){

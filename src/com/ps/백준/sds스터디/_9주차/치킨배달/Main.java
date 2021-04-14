@@ -32,7 +32,7 @@ class Main {
     static int CHICKEN = 2;
 
     public static void main(String[] args) throws Exception {
-        System.setIn(new FileInputStream("src/com/ps/백준/sds스터디/_9주차/치킨배달/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/sds스터디/_9주차/치킨배달/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
@@ -98,41 +98,21 @@ class Main {
             return;
         }
 
-        for (int i = lastSelectIdx; i < aliveChickenFlag.length; i++) {
-            if(aliveChickenFlag[i]) continue;
-
-            aliveChickenFlag[i] = true;
-
-//            List<POINT> aliveChickenPosList = new ArrayList<>();
-//            for (int j = 0; j < aliveChickenFlag.length; j++) {
-//                if(aliveChickenFlag[j]){
-//                    aliveChickenPosList.add(chickenPosList.get(j));
-//                }
-//            }
+//        for (int i = lastSelectIdx; i < aliveChickenFlag.length; i++) {
+//            if(aliveChickenFlag[i]) continue;
 //
-//            int sum = 0;
-//            for (POINT homePos : homePosList) {
-//                int minDistance = 0;
-//                for (POINT chickenPos : aliveChickenPosList) {
-//                    int distance = calDistance(homePos, chickenPos);
-//                    if(minDistance < distance){
-//                        minDistance = distance;
-//                    }
-//                }
-//
-//                sum += minDistance;
-//            }
-//
-//            if(sum < answer){
-//                answer = sum;
-//            }
+//            aliveChickenFlag[i] = true;
+//            recur(selectCount + 1, lastSelectIdx + 1);
+//            aliveChickenFlag[i] = false;
+//        }
 
+        if(lastSelectIdx == aliveChickenFlag.length) return;
 
+        aliveChickenFlag[lastSelectIdx] = true;
+        recur(selectCount + 1, lastSelectIdx + 1);
+        aliveChickenFlag[lastSelectIdx] = false;
 
-            recur(selectCount + 1, lastSelectIdx + 1);
-            aliveChickenFlag[i] = false;
-        }
-
+        recur(selectCount, lastSelectIdx + 1);
     }
 
     private static int calDistance(POINT homePos, POINT chickenPos) {

@@ -67,7 +67,7 @@ class Main {
         System.out.println(answer);
     }
 
-    private static void recur(int selectCount, int lastSelectIdx) {
+    private static void recur(int selectCount, int nextStartSelectIndex) {
         if(selectCount == m){
 //            System.out.println(Arrays.toString(aliveChickenFlag));
 
@@ -98,12 +98,10 @@ class Main {
             return;
         }
 
-        for (int i = lastSelectIdx; i < aliveChickenFlag.length; i++) {
-            if(aliveChickenFlag[i]) continue;
-
-            aliveChickenFlag[i] = true;
-            recur(selectCount + 1, i + 1);
-            aliveChickenFlag[i] = false;
+        for (int selectIndex = nextStartSelectIndex; selectIndex < aliveChickenFlag.length; selectIndex++) {
+            aliveChickenFlag[selectIndex] = true;
+            recur(selectCount + 1, selectIndex + 1);
+            aliveChickenFlag[selectIndex] = false;
         }
     }
 

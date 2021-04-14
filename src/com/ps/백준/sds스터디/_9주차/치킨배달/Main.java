@@ -98,21 +98,13 @@ class Main {
             return;
         }
 
-//        for (int i = lastSelectIdx; i < aliveChickenFlag.length; i++) {
-//            if(aliveChickenFlag[i]) continue;
-//
-//            aliveChickenFlag[i] = true;
-//            recur(selectCount + 1, lastSelectIdx + 1);
-//            aliveChickenFlag[i] = false;
-//        }
+        for (int i = lastSelectIdx; i < aliveChickenFlag.length; i++) {
+            if(aliveChickenFlag[i]) continue;
 
-        if(lastSelectIdx == aliveChickenFlag.length) return;
-
-        aliveChickenFlag[lastSelectIdx] = true;
-        recur(selectCount + 1, lastSelectIdx + 1);
-        aliveChickenFlag[lastSelectIdx] = false;
-
-        recur(selectCount, lastSelectIdx + 1);
+            aliveChickenFlag[i] = true;
+            recur(selectCount + 1, i + 1);
+            aliveChickenFlag[i] = false;
+        }
     }
 
     private static int calDistance(POINT homePos, POINT chickenPos) {

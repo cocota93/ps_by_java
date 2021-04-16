@@ -23,6 +23,17 @@ import java.util.StringTokenizer;
 * -> 첫번쨰 방법 시간초과
 * */
 
+/*
+* 다른사람들의 풀이를 보니
+* 중복된 숫자가 k가 될떄까지 구간의 범위를 구한뒤
+* k가 되면 앞에서 구간을 줄이고
+* 다시 k가 줄어들경우 뒤에 구간을 늘리는 방식으로 해서 답을 구하라고 설명하고 있다.
+* 전형적인 투포인터 모양이긴 한데...
+* 그렇게 했을떄 최대 구간이 나온다는게 직관적으로 와닿지가 않는다.
+* -> 중복된 숫자의 수에 여유가 생길떄마다 최장거리를 구한다고 이해하면 될것 같다
+* -> 이렇게 함으로써 최장거리를 구하기 위해 매번 중간부분을 덧셈 해봐야 했던 부분을 스킵하고 일부구간만 더해보면 알수 있게되네
+* */
+
 
 class Main {
 
@@ -32,7 +43,7 @@ class Main {
     static int board[];
 
     public static void main(String[] args) throws Exception {
-        System.setIn(new FileInputStream("src/com/ps/백준/투포인터/겹치는건싫어/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/투포인터/겹치는건싫어/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
@@ -51,27 +62,54 @@ class Main {
 
         int answer = 0;
 
-        for (int startIdx = 0; startIdx < board.length; startIdx++) {
-            int rangeLength = 0;
-            int overlappedCheck[] = new int[board.length];
+        int left = 0;
+        int right = 0;
+        int rangeLength = 0;
+        int overlappedCheck[] = new int[100000 + 1];
 
-            for (int i = startIdx; i < board.length; i++) {
-                overlappedCheck[board[i]]++;
+        while(left <= right && right < board.length){
+            if(overlappedCheck[board[right]] < k){
 
-                if(overlappedCheck[board[i]] > k){
-                    break;
-                }
-
+                overlappedCheck[board[right]]++;
                 rangeLength++;
+                right++;
+
+                if(rangeLength > answer){
+                    answer = rangeLength;
+                }
+            }else {
+                overlappedCheck[board[left]]--;
+                left++;
+                rangeLength--;
             }
 
-            if(answer < rangeLength){
-                answer = rangeLength;
-            }
         }
 
-
         System.out.println(answer);
+
+
+
+//        for (int startIdx = 0; startIdx < board.length; startIdx++) {
+//            int rangeLength = 0;
+//            int overlappedCheck[] = new int[board.length];
+//
+//            for (int i = startIdx; i < board.length; i++) {
+//                overlappedCheck[board[i]]++;
+//
+//                if(overlappedCheck[board[i]] > k){
+//                    break;
+//                }
+//
+//                rangeLength++;
+//            }
+//
+//            if(answer < rangeLength){
+//                answer = rangeLength;
+//            }
+//        }
+
+
+//        System.out.println(answer);
     }
 
 }

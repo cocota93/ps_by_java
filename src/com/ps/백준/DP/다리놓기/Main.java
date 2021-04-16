@@ -15,12 +15,12 @@ class Main {
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
 
-//        long dp[] = new long[30 + 1];
-//        dp[0] = 0;
-//        dp[1] = 1;
-//        for (int i = 2; i < dp.length; i++) {
-//            dp[i] = dp[i - 1] * i;
-//        }
+        long dp[] = new long[30 + 1];
+        dp[0] = 0;
+        dp[1] = 1;
+        for (int i = 2; i < dp.length; i++) {
+            dp[i] = dp[i - 1] * i;
+        }
 
         int t = Integer.parseInt(br.readLine());
         for (int testCase = 0; testCase < t; testCase++) {
@@ -30,15 +30,9 @@ class Main {
 
             //mcn
 
-            long topResult = 1;
-            for (long top = m; top > m - n; top--) {
-                topResult *= top;
-            }
+            long topResult = dp[m] / dp[m - n];
 
-            long bottomResult = 1;
-            for (long bottom = n; bottom > 1; bottom--) {
-                bottomResult *= bottom;
-            }
+            long bottomResult = dp[n];
 
             long answer = topResult / bottomResult;
 

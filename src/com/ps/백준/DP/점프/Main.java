@@ -20,7 +20,7 @@ class Main {
     static long pathCount[][];
 
     public static void main(String[] args) throws Exception {
-        System.setIn(new FileInputStream("src/com/ps/백준/DP/점프/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/DP/점프/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
@@ -36,10 +36,10 @@ class Main {
             }
         }
 
-//        pathCount[0][0] = 1;
+        pathCount[0][0] = 1;
 
-        Init();
-        printBox(pathCount);
+//        Init();
+//        printBox(pathCount);
 
         //오른쪽으로 가는경우
         for (int i = 0; i < board.length; i++) {
@@ -48,43 +48,19 @@ class Main {
                 if(board[i][j] == 0) continue;
 
                 int moveCount = board[i][j];
-                if(j + moveCount >= board[0].length) {
-                    continue;
+                if(i + moveCount < board.length){
+                    pathCount[i + moveCount][j] += pathCount[i][j];
                 }
 
-                pathCount[i][j + moveCount] += pathCount[i][j];
+                if(j + moveCount < board[0].length) {
+                    pathCount[i][j + moveCount] += pathCount[i][j];
+                }
             }
         }
 
-        printBox(pathCount);
-
-        //아래쪽으로 가는경우
-        for (int i = 0; i < board[0].length; i++) {
-            for (int j = 0; j < board.length; j++) {
-                if(pathCount[j][i] == 0) continue;
-                if(board[j][i] == 0) continue;
-
-                int moveCount = board[j][i];
-                if(j + moveCount >= board.length) {
-                    continue;
-                }
-
-                pathCount[j + moveCount][i] += pathCount[j][i];
-//                pathCount[j][i + moveCount]++;
-            }
-        }
-
-
-        printBox(pathCount);
-
-
-
-//        pathCount[pathCount.length - 1][pathCount[0].length - 1] = 0;
-
-
+//        printBox(pathCount);
 
         System.out.println(pathCount[pathCount.length - 1][pathCount[0].length - 1]);
-
     }
 
     private static void Init() {

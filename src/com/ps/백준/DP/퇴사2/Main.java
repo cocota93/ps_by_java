@@ -2,6 +2,7 @@ package com.ps.백준.DP.퇴사2;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.io.FileInputStream;
 import java.util.StringTokenizer;
@@ -14,7 +15,7 @@ class Main {
 
 
     public static void main(String[] args) throws Exception {
-        System.setIn(new FileInputStream("src/com/ps/백준/DP/퇴사2/input.txt"));
+//        System.setIn(new FileInputStream("src/com/ps/백준/DP/퇴사2/input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
@@ -22,7 +23,7 @@ class Main {
         int n = Integer.parseInt(br.readLine());
         int[] timeBoard = new int[n + 1];
         int[] payBoard = new int[n + 1];
-        int[][] dp = new int[n + 1][n + 1];
+        int[] dp = new int[n + 1 + 1];//마지막날 일할경우 다음날 돈들어와서 + 1 해줘야됨
 
         for (int i = 1; i <= n; i++) {
             st = new StringTokenizer(br.readLine(), " ");
@@ -32,16 +33,19 @@ class Main {
             payBoard[i] = cost;
         }
 
-        for (int day = 1; day < dp.length; day++) {
-            int startDay = day;
-            int endDay = day + timeBoard[day];
-            int pay = payBoard[day];
+        for (int curDay = 1; curDay < timeBoard.length; curDay++) {
+            int endDay = curDay + timeBoard[curDay];
+            int pay = payBoard[curDay];
+
+            //그 전날 상담 안하고 넘긴경우
+            dp[curDay] = Math.max(dp[curDay], dp[curDay - 1]);
 
             if(endDay < dp.length){
-                dp[startDay][endDay] = Math.max(dp[startDay][endDay], pay);
+                dp[endDay] = Math.max(dp[endDay], dp[curDay] + pay);
             }
         }
 
+        System.out.println(Arrays.stream(dp).max().getAsInt());
     }
 
 }

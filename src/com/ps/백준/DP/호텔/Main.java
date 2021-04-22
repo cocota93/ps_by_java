@@ -33,11 +33,9 @@ class Main {
             int cost = Integer.parseInt(st.nextToken());
             int customerCount = Integer.parseInt(st.nextToken());
 
-//            dp[customerCount] = cost;
-            for (int j = customerCount; j < dp.length; j += customerCount) {
+            for (int j = customerCount ; j < dp.length; j++) {
                 dp[j] = Math.min(dp[j], dp[j - customerCount] + cost);
             }
-
         }
 
         int answer = INF;

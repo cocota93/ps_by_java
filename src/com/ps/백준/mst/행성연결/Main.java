@@ -49,43 +49,7 @@ class Main {
 
     private static void prim(PriorityQueue<Point> pq) {
         //어차피 다 방문해야되니 출발위치는 아무데나 해도됨. 걍 0으로 정하고 처리
-        int firstStart = -1;
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                if(board[i][j] != 0){
-                    firstStart = i;
-                    break;
-                }
-            }
-
-            if(firstStart != -1) break;
-        }
-
-        if(firstStart == -1) {
-            System.out.println("첫스타트 시작 이상");
-            System.out.println("첫스타트 시작 이상");
-            System.out.println("첫스타트 시작 이상");
-            System.out.println("첫스타트 시작 이상");
-            System.out.println("첫스타트 시작 이상");
-            System.out.println("첫스타트 시작 이상");
-            System.out.println("첫스타트 시작 이상");
-            System.out.println("첫스타트 시작 이상");
-            System.out.println("첫스타트 시작 이상");
-            System.out.println("첫스타트 시작 이상");
-            return;
-        }
-
-
-//        visited[firstStart] = true;
-//        for (int to = 0; to < board[0].length; to++) {
-//            if(firstStart == to) continue;
-//
-//            if(board[firstStart][to] != 0){
-//                pq.add(new Point(to, board[firstStart][to]));
-//            }
-//        }
-
-        pq.add(new Point(firstStart,0));
+        pq.add(new Point(0,0));
 
         while(!pq.isEmpty()){
             Point visitPlace = pq.poll();

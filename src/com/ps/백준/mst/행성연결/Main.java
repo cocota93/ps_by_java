@@ -49,6 +49,7 @@ class Main {
 
     private static void prim(PriorityQueue<Point> pq) {
         //어차피 다 방문해야되니 출발위치는 아무데나 해도됨. 걍 0으로 정하고 처리
+        //-> n이 최소 1부터 시작이라 무조건 0부터 해야됨.
         pq.add(new Point(0,0));
 
         while(!pq.isEmpty()){

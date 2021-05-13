@@ -12,6 +12,7 @@ import java.util.StringTokenizer;
 * 이게 왜 dp??
 * 일단 지금 잠깐 봤을떄는 bfs이용한 완탐정도 인것같은데?
 
+  해보니까 메모리초과됨.
 * */
 
 class Main {
@@ -35,20 +36,42 @@ class Main {
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
         board = new int[n][m];
-        dp = new int[n][m];
+//        dp = new int[n][m];
         for (int i = 0; i < board.length; i++) {
             st = new StringTokenizer(br.readLine(), " ");
             for (int j = 0; j < board[0].length; j++) {
                 board[i][j] = Integer.parseInt(st.nextToken());
+
+
             }
         }
 
-        int startY = 0;
-        int startX = 0;
-        bfs(startY, startX);
+        for (int x = 1; x < board[0].length; x++) {
+            board[0][x] = board[0][x - 1] + board[0][x];
+        }
+
+        for (int y = 1; y < board.length; y++) {
+            board[y][0] = board[y - 1][0] + board[y][0];
+        }
+
+        for (int y = 1; y < board.length; y++) {
+            for (int x = 1; x < board[0].length; x++) {
+                int[] temp = new int[3];
+                temp[0] = board[y - 1][x] + board[y][x];
+                temp[1] = board[y][x - 1] + board[y][x];
+                temp[2] = board[y - 1][x - 1] + board[y][x];
+
+                board[y][x] = Math.max(temp[2], Math.max(temp[0], temp[1]));
+            }
+        }
+
+        System.out.println(board[n - 1][m - 1]);
 
 
-        System.out.println(dp[n - 1][m - 1]);
+//        int startY = 0;
+//        int startX = 0;
+//        bfs(startY, startX);
+//        System.out.println(dp[n - 1][m - 1]);
     }
 
     private static void bfs(int startY, int startX) {

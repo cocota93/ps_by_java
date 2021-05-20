@@ -1,7 +1,5 @@
 package com.ps.프로그래머스.level1;
 
-import com.sun.deploy.util.StringUtils;
-
 import javax.management.relation.RelationSupport;
 import java.util.Arrays;
 import java.util.HashMap;

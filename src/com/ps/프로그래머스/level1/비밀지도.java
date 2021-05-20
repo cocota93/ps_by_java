@@ -1,6 +1,5 @@
 package com.ps.프로그래머스.level1;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
